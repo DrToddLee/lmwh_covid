@@ -132,7 +132,7 @@ text(sav$xlim[1], -7:-12, pos=4, c(
                            "(F) Overall"))
 
 
-### You will want to use png or pdf or tif to save this res 350, width=3196, height=1648
+### You will want to use png or pdf or tif to save this res 350, width=3196, height=1648.  Then you paste the 2 together.
  						   
 # png(filename="D:/OneDrive - McGill University/Papers/ARCHIVE - Published/Covid anticoag/forest.png", res=350, width=3196, height=1648)
 #dev.off()
@@ -145,19 +145,21 @@ library(ggplot2)
 
 rexp2 <- function(x){round(exp(x),digits=2)}
 #calculate probablities
+mean<- log(0.77)
+sd<-(log(0.94)-log(0.63))/3.92
 #less than RR 0.831 (1% ARR)
-lim1<-round(100*pnorm(log(0.831),-.26136476,.10208165),1)
+lim1<-round(100*pnorm(log(0.831),mean,sd),1)
 #less than RR 1 (0%ARR)
-lim2<-round(100*pnorm(log(1),-.26136476,.10208165),1)
+lim2<-round(100*pnorm(log(1),mean,sd),1)
 text1<-paste0("Probability ARR >0% (dark + light blue): ",lim2,"%\nProbability ARR >=1% (light blue): ")
 text1<-paste0(text1,lim1,"%")
 
 ggplot(data.frame(x = c(log(0.5), 0.75)), aes(x = x)) +
 geom_vline(xintercept = 0, linetype="dashed",color="red")+  
 theme_bw()+
-stat_function(fun = dnorm, args=c(-.26136476,.10208165),size=0.5) +
-geom_area(stat ="function", fun=dnorm, fill="darkblue", alpha=0.2, xlim=c(-0.6,log(0.831)),args=c(-.26136476,.10208165))+
-geom_area(stat ="function", fun=dnorm, fill="darkblue", alpha=0.6, xlim=c(log(0.831),0),args=c(-.26136476,.10208165))+
+stat_function(fun = dnorm, args=c(mean,sd),size=0.5) +
+geom_area(stat ="function", fun=dnorm, fill="darkblue", alpha=0.2, xlim=c(-0.6,log(0.831)),args=c(mean,sd))+
+geom_area(stat ="function", fun=dnorm, fill="darkblue", alpha=0.6, xlim=c(log(0.831),0),args=c(mean,sd))+
 theme(panel.grid.minor = element_blank(),panel.grid.major=element_blank(),legend.position = "none",panel.border = element_blank(),axis.line = element_line(colour = "black"),
 axis.title.y = element_text(angle = 180))+
 scale_y_continuous(position="right")+
